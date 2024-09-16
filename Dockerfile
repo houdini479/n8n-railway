@@ -1,29 +1,20 @@
 FROM n8nio/n8n:latest
 
-ARG N8N_VERSION=0.228.2
+ARG PGPASSWORD
+ARG PGHOST
+ARG PGPORT
+ARG PGDATABASE
+ARG PGUSER
 
-# Install required system packages and n8n
-RUN apk add --update graphicsmagick tzdata
+ENV DB_TYPE=postgresdb
+ENV DB_POSTGRESDB_DATABASE=$PGDATABASE
+ENV DB_POSTGRESDB_HOST=$PGHOST
+ENV DB_POSTGRESDB_PORT=$PGPORT
+ENV DB_POSTGRESDB_USER=$PGUSER
+ENV DB_POSTGRESDB_PASSWORD=$PGPASSWORD
 
-# Switch to root user
-USER root
+ARG ENCRYPTION_KEY
 
-# Install build dependencies, n8n, and then clean up
-RUN apk --update add --virtual build-dependencies python3 build-base && \
-    npm_config_user=root npm install --location=global n8n@${N8N_VERSION} && \
-    apk del build-dependencies
+ENV N8N_ENCRYPTION_KEY=$ENCRYPTION_KEY
 
-# Install Cheerio globally
-RUN npm install --location=global cheerio
-
-# Set the working directory
-WORKDIR /data
-
-# Expose the port (environment variable defined at runtime)
-EXPOSE $PORT
-
-# Set the environment variable to run n8n as root user
-ENV N8N_USER_ID=root
-
-# Start n8n
-CMD export N8N_PORT=$PORT && n8n start
+CMD ["n8n start"]
