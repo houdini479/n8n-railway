@@ -14,9 +14,6 @@ RUN apk --update add --virtual build-dependencies python3 build-base && \
     npm_config_user=root npm install --location=global n8n@${N8N_VERSION} && \
     apk del build-dependencies
 
-# Install Cheerio globally
-RUN npm install --location=global cheerio
-
 # Set the working directory
 WORKDIR /data
 
