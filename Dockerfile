@@ -1,4 +1,5 @@
-FROM node:16-alpine
+# Use a more recent version of Node (check n8n's compatibility)
+FROM node:18-alpine
 
 ARG N8N_VERSION=1.58.2
 
